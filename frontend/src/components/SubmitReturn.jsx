@@ -3,6 +3,7 @@ import axios from 'axios';
 
 function SubmitReturn({ onResult }) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     age: '', account_age_days: '', avg_order_value_usd: '',
     refund_amount_requested_usd: '', is_high_value_item: 0,
@@ -31,96 +32,109 @@ function SubmitReturn({ onResult }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     setLoading(true);
     try {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/predict`, formData);
       onResult(res.data);
     } catch (err) {
       console.error(err);
-      alert('Prediction failed — check backend is running');
+      setError('Prediction failed — the backend may be waking up (free tier), try again in a few seconds.');
     }
     setLoading(false);
   };
 
   return (
-    <div className="page">
-      <h2>Submit Return</h2>
-      <form onSubmit={handleSubmit} className="return-form">
+    <div className="page-wrap">
+      <div className="page-header">
+        <h1>Submit a Return</h1>
+        <p className="subtitle">Enter the return details below to check its risk score.</p>
+      </div>
 
-        <div className="form-group">
-          <label>Customer Age</label>
-          <input name="age" type="number" onChange={handleChange} required />
+      {error && <div className="error-banner">{error}</div>}
+
+      <form onSubmit={handleSubmit} className="form-card">
+
+        <div className="form-section">
+          <h3 className="section-title">Customer History</h3>
+          <p className="section-note">In production, this would auto-populate from the merchant's customer database — shown here as manual input for demo purposes.</p>
+          <div className="form-grid">
+            <div className="form-group">
+              <label>Age</label>
+              <input name="age" type="number" min="0" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Account Age (days)</label>
+              <input name="account_age_days" type="number" min="0" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Total Lifetime Orders</label>
+              <input name="total_orders_lifetime" type="number" min="0" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Times Contacted Support</label>
+              <input name="customer_support_contacts" type="number" min="0" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Previous Disputes</label>
+              <input name="previous_dispute_count" type="number" min="0" onChange={handleChange} required />
+            </div>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label>Account Age (days)</label>
-          <input name="account_age_days" type="number" onChange={handleChange} required />
+        <div className="form-section">
+          <h3 className="section-title">This Return</h3>
+          <div className="form-grid">
+            <div className="form-group">
+              <label>Average Order Value ($)</label>
+              <input name="avg_order_value_usd" type="number" min="0" step="0.01" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Refund Amount ($)</label>
+              <input name="refund_amount_requested_usd" type="number" min="0" step="0.01" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Days to Return</label>
+              <input name="days_to_return" type="number" min="0" onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Product Category</label>
+              <select name="product_category" onChange={handleChange}>
+                <option>Clothing</option><option>Shoes</option><option>Beauty</option>
+                <option>Electronics</option><option>Toys</option><option>Books</option>
+                <option>Sports</option><option>Jewelry</option><option>Home & Kitchen</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Return Reason</label>
+              <select name="return_reason" onChange={handleChange}>
+                <option>Changed Mind</option><option>Defective/Broken</option>
+                <option>Item Not Received</option><option>Wrong Item Sent</option>
+                <option>Not As Described</option><option>Too Large</option>
+                <option>Too Small</option><option>Quality Issue</option>
+                <option>Arrived Late</option><option>Found Better Price</option>
+                <option>Accidental Order</option><option>Gift Duplicate</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label>Average Order Value ($)</label>
-          <input name="avg_order_value_usd" type="number" onChange={handleChange} required />
+        <div className="form-section">
+          <h3 className="section-title">Flags</h3>
+          <div className="toggle-row">
+            <label className="toggle-pill">
+              <input type="checkbox" defaultChecked onChange={handleCheckbox('tracking_number_valid')} />
+              <span>Tracking Number Valid</span>
+            </label>
+            <label className="toggle-pill">
+              <input type="checkbox" onChange={handleCheckbox('discount_used')} />
+              <span>Discount Used</span>
+            </label>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label>Refund Amount Requested ($)</label>
-          <input name="refund_amount_requested_usd" type="number" onChange={handleChange} required />
-        </div>
-
-        <div className="form-group">
-          <label>Days to Return</label>
-          <input name="days_to_return" type="number" onChange={handleChange} required />
-        </div>
-
-        <div className="form-group">
-          <label>Total Lifetime Orders</label>
-          <input name="total_orders_lifetime" type="number" onChange={handleChange} required />
-        </div>
-
-        <div className="form-group">
-          <label>Support Contacts</label>
-          <input name="customer_support_contacts" type="number" onChange={handleChange} required />
-        </div>
-
-        <div className="form-group">
-          <label>Previous Disputes</label>
-          <input name="previous_dispute_count" type="number" onChange={handleChange} required />
-        </div>
-
-        <div className="form-group">
-          <label>Product Category</label>
-          <select name="product_category" onChange={handleChange}>
-            <option>Clothing</option><option>Shoes</option><option>Beauty</option>
-            <option>Electronics</option><option>Toys</option><option>Books</option>
-            <option>Sports</option><option>Jewelry</option><option>Home & Kitchen</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>Return Reason</label>
-          <select name="return_reason" onChange={handleChange}>
-            <option>Changed Mind</option><option>Defective/Broken</option>
-            <option>Item Not Received</option><option>Wrong Item Sent</option>
-            <option>Not As Described</option><option>Too Large</option>
-            <option>Too Small</option><option>Quality Issue</option>
-            <option>Arrived Late</option><option>Found Better Price</option>
-            <option>Accidental Order</option><option>Gift Duplicate</option>
-          </select>
-        </div>
-
-        <div className="form-group checkbox-group">
-          <label>
-            <input type="checkbox" defaultChecked onChange={handleCheckbox('tracking_number_valid')} />
-            Tracking Number Valid
-          </label>
-          <label>
-            <input type="checkbox" onChange={handleCheckbox('discount_used')} />
-            Discount Used
-          </label>
-        </div>
-
-        <button type="submit" disabled={loading}>
-          {loading ? 'Checking...' : 'Check Risk'}
+        <button type="submit" className="submit-btn" disabled={loading}>
+          {loading ? 'Analyzing…' : 'Check Risk'}
         </button>
       </form>
     </div>

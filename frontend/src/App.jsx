@@ -8,11 +8,23 @@ function App() {
 
   return (
     <div className="app">
-      {result ? (
-        <RiskResult result={result} onReset={() => setResult(null)} />
-      ) : (
-        <SubmitReturn onResult={setResult} />
-      )}
+      <header className="topbar">
+        <div className="topbar-inner">
+          <div className="brand">
+            <span className="brand-mark">RR</span>
+            <span className="brand-name">Return Risk Scorer</span>
+          </div>
+          <span className="topbar-tag">AI Risk Manager · Razorpay Buildathon</span>
+        </div>
+      </header>
+
+      <main className="main">
+        {result ? (
+          <RiskResult result={result} onReset={() => setResult(null)} />
+        ) : (
+          <SubmitReturn onResult={setResult} />
+        )}
+      </main>
     </div>
   );
 }
