@@ -1,5 +1,5 @@
 const demoResults = [
-  { before: '/demo/item1_before.jpg', after: '/demo/item1_after.jpg', similarity: 0.920, flagged: false },
+  { before: '/demo/item1_before.jpg', after: '/demo/item1_after.jpg', similarity: 0.750, flagged: true },
   { before: '/demo/item2_before.jpg', after: '/demo/item2_after.jpg', similarity: 0.760, flagged: true },
   { before: '/demo/item3_before.jpg', after: '/demo/item3_after.jpg', similarity: 0.768, flagged: true },
   { before: '/demo/item4_before.jpg', after: '/demo/item4_after.jpg', similarity: 0.784, flagged: true },
