@@ -243,3 +243,9 @@ body {
   margin-bottom: 0.9rem;
   font-style: italic;
 }
+
+.field-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}

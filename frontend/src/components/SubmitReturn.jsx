@@ -31,18 +31,25 @@ function SubmitReturn({ onResult }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/predict`, formData);
-      onResult(res.data);
-    } catch (err) {
-      console.error(err);
-      setError('Prediction failed — the backend may be waking up (free tier), try again in a few seconds.');
-    }
-    setLoading(false);
+  e.preventDefault();
+  setError(null);
+  setLoading(true);
+
+  const payload = {
+    ...formData,
+    avg_order_value_usd: Number(formData.avg_order_value_usd) / 94,
+    refund_amount_requested_usd: Number(formData.refund_amount_requested_usd) / 94,
   };
+
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/predict`, payload);
+    onResult(res.data);
+  } catch (err) {
+    console.error(err);
+    setError('Prediction failed — the backend may be waking up (free tier), try again in a few seconds.');
+  }
+  setLoading(false);
+};
 
   return (
     <div className="page-wrap">
@@ -86,13 +93,15 @@ function SubmitReturn({ onResult }) {
           <h3 className="section-title">This Return</h3>
           <div className="form-grid">
             <div className="form-group">
-              <label>Average Order Value ($)</label>
-              <input name="avg_order_value_usd" type="number" min="0" step="0.01" onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label>Refund Amount ($)</label>
-              <input name="refund_amount_requested_usd" type="number" min="0" step="0.01" onChange={handleChange} required />
-            </div>
+  <label>Average Order Value (₹)</label>
+  <input name="avg_order_value_usd" type="number" min="0" step="0.01" onChange={handleChange} required />
+  <span className="field-hint">Typical range: ₹1,410 – ₹28,200</span>
+</div>
+<div className="form-group">
+  <label>Refund Amount (₹)</label>
+  <input name="refund_amount_requested_usd" type="number" min="0" step="0.01" onChange={handleChange} required />
+  <span className="field-hint">Typical range: ₹1,410 – ₹28,200</span>
+</div>
             <div className="form-group">
               <label>Days to Return</label>
               <input name="days_to_return" type="number" min="0" onChange={handleChange} required />
