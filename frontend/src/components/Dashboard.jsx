@@ -6,9 +6,11 @@ const dummyReturns = [
   { id: 'RET-8825', customer: 'Sneha Reddy', item: 'Silk Saree', location: 'Hyderabad, IN', status: 'Flagged', risk: 'High' },
 ];
 
-function Dashboard({ onNewRequest }) {
+function Dashboard() {
   return (
     <div className="page-wrap">
+      <p className="breadcrumb">Home / Seller Portal</p>
+
       <div className="stat-grid">
         <div className="stat-card">
           <span className="stat-label">Total Orders</span>
@@ -27,36 +29,41 @@ function Dashboard({ onNewRequest }) {
         </div>
       </div>
 
-      <div className="table-card">
-        <div className="table-header">
-          <h3>Recent Returns</h3>
-          <button className="new-request-btn" onClick={onNewRequest}>+ Check New Return</button>
+      <div className="summary-grid">
+        <div className="summary-card">
+          <h3>Order Summary</h3>
+
+          <div className="progress-block">
+            <div className="progress-label">
+              <span>Pending Review</span>
+              <span className="progress-count">62/1,842 Orders</span>
+            </div>
+            <div className="progress-track">
+              <div className="progress-fill fill-warning" style={{ width: '34%' }} />
+            </div>
+            <span className="progress-pct">34%</span>
+          </div>
+
+          <div className="progress-block">
+            <div className="progress-label">
+              <span>Auto-Approved</span>
+              <span className="progress-count">1,780/1,842 Orders</span>
+            </div>
+            <div className="progress-track">
+              <div className="progress-fill fill-success" style={{ width: '97%' }} />
+            </div>
+            <span className="progress-pct">97%</span>
+          </div>
         </div>
 
-        <table className="returns-table">
-          <thead>
-            <tr>
-              <th>Request ID</th>
-              <th>Customer</th>
-              <th>Item</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th>Risk</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dummyReturns.map((r) => (
-              <tr key={r.id}>
-                <td>{r.id}</td>
-                <td>{r.customer}</td>
-                <td>{r.item}</td>
-                <td>{r.location}</td>
-                <td><span className={`status-pill status-${r.status.toLowerCase()}`}>{r.status}</span></td>
-                <td><span className={`risk-pill risk-${r.risk.toLowerCase()}`}>{r.risk}</span></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="summary-card">
+          <h3>Risk Breakdown</h3>
+          <div className="risk-breakdown">
+            <div className="risk-row"><span className="dot dot-low"></span> Low Risk <strong>1,689</strong></div>
+            <div className="risk-row"><span className="dot dot-medium"></span> Medium Risk <strong>116</strong></div>
+            <div className="risk-row"><span className="dot dot-high"></span> High Risk <strong>37</strong></div>
+          </div>
+        </div>
       </div>
     </div>
   );
