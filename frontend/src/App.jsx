@@ -5,6 +5,7 @@ import Orders from './components/Orders';
 import Returns from './components/Returns';
 import SubmitReturn from './components/SubmitReturn';
 import RiskResult from './components/RiskResult';
+import PhotoVerificationDemo from './components/PhotoVerificationDemo';
 import './App.css';
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           </>
         )}
         {view === 'result' && <RiskResult result={result} onReset={handleReset} />}
+        {view === 'photoverification' && <PhotoVerificationDemo />}
       </main>
     </div>
   );

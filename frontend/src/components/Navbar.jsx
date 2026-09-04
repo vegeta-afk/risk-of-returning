@@ -11,6 +11,7 @@ function Navbar({ view, setView }) {
           <button className={`nav-link ${view === 'dashboard' ? 'active' : ''}`} onClick={() => setView('dashboard')}>Dashboard</button>
           <button className={`nav-link ${view === 'orders' ? 'active' : ''}`} onClick={() => setView('orders')}>Orders</button>
           <button className={`nav-link ${view === 'returns' ? 'active' : ''}`} onClick={() => setView('returns')}>Returns</button>
+          <button className={`nav-link ${view === 'photoverification' ? 'active' : ''}`} onClick={() => setView('photoverification')}>Photo Verification</button>
         </nav>
 
         <div className="navbar-right">
