@@ -1,10 +1,22 @@
 import { useState } from 'react';
+import Dashboard from './components/Dashboard';
 import SubmitReturn from './components/SubmitReturn';
 import RiskResult from './components/RiskResult';
 import './App.css';
 
 function App() {
+  const [view, setView] = useState('dashboard'); // 'dashboard' | 'form' | 'result'
   const [result, setResult] = useState(null);
+
+  const handleResult = (data) => {
+    setResult(data);
+    setView('result');
+  };
+
+  const handleReset = () => {
+    setResult(null);
+    setView('dashboard');
+  };
 
   return (
     <div className="app">
@@ -19,11 +31,14 @@ function App() {
       </header>
 
       <main className="main">
-        {result ? (
-          <RiskResult result={result} onReset={() => setResult(null)} />
-        ) : (
-          <SubmitReturn onResult={setResult} />
+        {view === 'dashboard' && <Dashboard onNewRequest={() => setView('form')} />}
+        {view === 'form' && (
+          <>
+            <button className="back-link" onClick={() => setView('dashboard')}>← Back to Dashboard</button>
+            <SubmitReturn onResult={handleResult} />
+          </>
         )}
+        {view === 'result' && <RiskResult result={result} onReset={handleReset} />}
       </main>
     </div>
   );
