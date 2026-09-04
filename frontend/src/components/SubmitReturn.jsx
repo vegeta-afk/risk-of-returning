@@ -33,7 +33,7 @@ function SubmitReturn({ onResult }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post('http://127.0.0.1:8000/predict', formData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/predict`, formData);
       onResult(res.data);
     } catch (err) {
       console.error(err);
