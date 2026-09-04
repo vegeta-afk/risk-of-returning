@@ -18,13 +18,27 @@ function SubmitReturn({ onResult }) {
     payment_method: 'PayPal'
   });
 
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'number' ? Number(value) : value
-    }));
-  };
+ const handleChange = (e) => {
+  const { name, value, type } = e.target;
+  const parsedValue = type === 'number' ? Number(value) : value;
+
+  setFormData(prev => ({
+    ...prev,
+    [name]: parsedValue,
+    // Auto-fill refund amount to match order value, only if user hasn't touched refund field yet
+    ...(name === 'avg_order_value_usd' && !prev._refundManuallySet
+      ? { refund_amount_requested_usd: parsedValue }
+      : {})
+  }));
+};
+
+const handleRefundChange = (e) => {
+  setFormData(prev => ({
+    ...prev,
+    refund_amount_requested_usd: Number(e.target.value),
+    _refundManuallySet: true
+  }));
+};
 
   const handleCheckbox = (name) => (e) => {
     setFormData(prev => ({ ...prev, [name]: e.target.checked ? 1 : 0 }));
@@ -93,17 +107,17 @@ function SubmitReturn({ onResult }) {
           <h3 className="section-title">This Return</h3>
           <div className="form-grid">
             <div className="form-group">
-  <label>Average Order Value (₹)</label>
+  <label> Order Value (₹)</label>
   <input name="avg_order_value_usd" type="number" min="0" step="0.01" onChange={handleChange} required />
   <span className="field-hint">Typical range: ₹1,410 – ₹28,200</span>
 </div>
 <div className="form-group">
   <label>Refund Amount (₹)</label>
-  <input name="refund_amount_requested_usd" type="number" min="0" step="0.01" onChange={handleChange} required />
-  <span className="field-hint">Typical range: ₹1,410 – ₹28,200</span>
+  <input name="refund_amount_requested_usd" type="number" min="0" step="0.01" value={formData.refund_amount_requested_usd} onChange={handleRefundChange} required />
+  <span className="field-hint">Auto-fills to match order value — edit for partial refunds</span>
 </div>
             <div className="form-group">
-              <label>Days to Return</label>
+              <label>Days to Return from Order Date</label>
               <input name="days_to_return" type="number" min="0" onChange={handleChange} required />
             </div>
             <div className="form-group">
