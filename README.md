@@ -1,5 +1,10 @@
 # Return Risk Scorer
 
+**Live demo:** [risk-of-returning frontend](https://frontend-wheat-xi-82.vercel.app) · [API docs](https://risk-of-returning.onrender.com/docs)
+
+> Note: the backend runs on Render's free tier, so the first request may take 30–45 seconds to wake up if it's been inactive. This is expected free-tier behavior, not a bug.
+
+
 An AI model for the seller side of e-commerce — checks whether a return request is safe to approve, or likely abuse (wardrobing, fraudulent claims, or serial returning), before the refund goes out.
 
 Built for Razorpay's AI Buildathon — Track 02: AI Risk Manager.
